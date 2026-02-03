@@ -29,7 +29,7 @@ const characters = [
                 act: "Acte 1",
                 slots: {
                     head: { name: "Haste Helm", loc: "Village Dévasté", source: "Coffre (Chariot)", type: "Loot", desc: "Élan au début du combat (+1.5m vitesse)." },
-                    cloak: { name: "Deathstalker Mantle", loc: "Camp", source: "Dark Urge", type: "Quête", desc: "Invisibilité après un kill (Exclusif Dark Urge)." },
+                    cloak: { name: "Cape", loc: "Random", source: "Loot", type: "Loot", desc: "Cape standard." },
                     body: { name: "Adamantine Splint Armour", loc: "Grymforge", source: "Forge", type: "Craft", desc: "-2 Dégâts reçus. Immunité Critiques. Chancelant." },
                     hands: { name: "Gloves of the Growling Underdog", loc: "Camp Gobelin", source: "Dror Ragzlin", type: "Loot", desc: "Avantage si entouré par 2+ ennemis." },
                     feet: { name: "Disintegrating Night Walkers", loc: "Grymforge", source: "Nere", type: "Boss", desc: "Immunité glissade/toile. Misty Step gratuit." },
@@ -38,7 +38,7 @@ const characters = [
                     ring2: { name: "Crusher's Ring", loc: "Camp Gobelin", source: "Crusher", type: "Loot", desc: "+3m de mouvement." },
                     meleeMain: { name: "Unseen Menace", loc: "Crèche Y'llek", source: "Marchand", type: "Marchand", desc: "Pique (2H). Invisible (Avantage permanent). Critique 19-20." },
                     meleeOff: { name: "(2 Mains)", loc: "-", source: "-", type: "Info", desc: "Utilise l'arme principale à deux mains." },
-                    rangedMain: { name: "Titanstring Bow", loc: "Zhentarim", source: "Brem", type: "Marchand", desc: "Ajoute Mod de Force aux dégâts." },
+                    rangedMain: { name: "Heavy Crossbow +1", loc: "Marchands", source: "Dammon/Roah", type: "Marchand", desc: "Dégâts solides à distance." },
                     rangedOff: { name: "(2 Mains)", loc: "-", source: "-", type: "Info", desc: "-" }
                 }
             },
@@ -46,7 +46,7 @@ const characters = [
                 act: "Acte 2",
                 slots: {
                     head: { name: "Flawed Helldusk Helmet", loc: "Last Light", source: "Dammon", type: "Craft", desc: "+2 JS Constitution. +1 AC vs Sorts." },
-                    cloak: { name: "Cloak of Protection", loc: "Last Light", source: "Talli", type: "Marchand", desc: "+1 AC / +1 JS." },
+                    cloak: { name: "Cloak of Elemental Absorption", loc: "Moonrise", source: "Coffre (Ketheric)", type: "Loot", desc: "Absorbe dégâts élémentaires -> Dégâts sur prochaine attaque." },
                     body: { name: "Dwarven Splintmail", loc: "Moonrise", source: "Lann Tarv", type: "Marchand", desc: "AC 19. +2 CON. -1 Dégâts reçus." },
                     hands: { name: "Flawed Helldusk Gloves", loc: "Last Light", source: "Dammon", type: "Craft", desc: "+1d4 Feu sur attaques. +1 JS Force." },
                     feet: { name: "Evasive Shoes", loc: "Last Light", source: "Mattis", type: "Marchand", desc: "+1 AC. +1 Acrobatie." },
@@ -55,14 +55,14 @@ const characters = [
                     ring2: { name: "Ring of Protection", loc: "Bosquet", source: "Mol", type: "Quête", desc: "+1 AC / +1 JS." },
                     meleeMain: { name: "Halberd of Vigilance", loc: "Moonrise", source: "Lann Tarv", type: "Marchand", desc: "Hallebarde (2H). +1d4 Force. +1 Initiative. Réaction Avantage." },
                     meleeOff: { name: "(2 Mains)", loc: "-", source: "-", type: "Info", desc: "-" },
-                    rangedMain: { name: "Hellfire Engine Crossbow", loc: "Foundry (Act 3)", source: "Craft", "type": "Craft", desc: "Accès Lightning Arrow. (Ou Darkfire Shortbow)." },
+                    rangedMain: { name: "Heavy Crossbow +1", loc: "Act 1", source: "Loot", "type": "Core", desc: "Pas d'alternative majeure dispo." },
                     rangedOff: { name: "(2 Mains)", loc: "-", source: "-", type: "Info", desc: "-" }
                 }
             },
             {
                 act: "Acte 3",
                 slots: {
-                    head: { name: "Helm of Balduran", loc: "Wyrmway", source: "Ansur", type: "Boss", desc: "+2 AC. Regen PV. Immunité Stun/Crit." },
+                    head: { name: "Sarevok's Horned Helmet", loc: "Temple Bhaal", source: "Sarevok", type: "Boss", desc: "Réduit le seuil de critique de 1. Immunité Effroi." },
                     cloak: { name: "Cloak of Displacement", loc: "Wyrm's Rock", source: "Danthelon", type: "Marchand", desc: "Désavantage aux attaquants (Blur permanent)." },
                     body: { name: "Helldusk Armour", loc: "House of Hope", source: "Raphael", type: "Boss", desc: "AC 21. Vol. Maîtrise automatique." },
                     hands: { name: "Gauntlets of Hill Giant Strength", loc: "House of Hope", source: "Archives", type: "Loot", desc: "Fixe la Force à 23." },
@@ -72,7 +72,7 @@ const characters = [
                     ring2: { name: "Ring of Protection", loc: "Bosquet", source: "Mol", type: "Quête", desc: "+1 AC / +1 JS." },
                     meleeMain: { name: "Balduran's Giantslayer", loc: "Wyrmway", source: "Ansur", type: "Boss", desc: "Double Mod Force aux dégâts. Forme de Géant." },
                     meleeOff: { name: "(2 Mains)", loc: "-", source: "-", type: "Info", desc: "-" },
-                    rangedMain: { name: "Gontr Mael", loc: "Foundry", source: "Titan", type: "Boss", desc: "Haste Céleste. Bolt of Guiding." },
+                    rangedMain: { name: "Gontr Mael", loc: "Foundry", source: "Titan", type: "Boss", desc: "Légendaire. Haste Céleste (5 tours, pas de léthargie)." },
                     rangedOff: { name: "(2 Mains)", loc: "-", source: "-", type: "Info", desc: "-" }
                 }
             }
@@ -103,7 +103,7 @@ const characters = [
                 act: "Acte 1",
                 slots: {
                     head: { name: "Holy Lance Helm", loc: "Monastère", source: "Coffre peint", type: "Loot", desc: "Ennemis qui ratent prennent 1d4 Radiant (Proc Orbes)." },
-                    cloak: { name: "Cape", loc: "Random", source: "Loot", type: "Loot", desc: "N'importe quelle cape (Protection arrive Acte 2)." },
+                    cloak: { name: "Cape", loc: "Random", source: "Loot", type: "Loot", desc: "N'importe quelle cape." },
                     body: { name: "Luminous Armour", loc: "Underdark", source: "Poste Séluné", type: "Loot", desc: "Dégâts Radiants = Onde de choc (Orbe Radiant)." },
                     hands: { name: "Gloves of Belligerent Skies", loc: "Crèche", source: "Inquisiteur", type: "Loot", desc: "Tonnerre/Radiant/Éclair = Réverbération." },
                     feet: { name: "Boots of Stormy Clamour", loc: "Underdark", source: "Omeluum", type: "Marchand", desc: "Appliquer Condition = Réverbération." },
@@ -176,16 +176,16 @@ const characters = [
                 act: "Acte 1",
                 slots: {
                     head: { name: "Haste Helm", loc: "Village Dévasté", source: "Coffre", type: "Loot", desc: "Élan au début du combat." },
-                    cloak: { name: "Deathstalker Mantle", loc: "Camp", source: "Dark Urge", type: "Quête", desc: "Invisibilité après un kill." },
+                    cloak: { name: "Cape", loc: "Random", source: "Loot", type: "Loot", desc: "Cape standard." },
                     body: { name: "The Graceful Cloth", loc: "Monastère (Route)", source: "Esther", type: "Marchand", desc: "+2 DEX. Avantage DEX. Saut amélioré." },
                     hands: { name: "The Sparkle Hands", loc: "Putrid Bog", source: "Coffre (Arbre)", type: "Loot", desc: "Charges de Foudre sur attaques mains nues." },
                     feet: { name: "Boots of Speed", loc: "Colonie Myconide", source: "Thulla", type: "Quête", desc: "Action Bonus : Dash (Double vitesse)." },
                     amulet: { name: "Sentient Amulet", loc: "Grymforge", source: "Lave", type: "Quête", desc: "Restoration Ki (Action Bonus)." },
                     ring1: { name: "Crusher's Ring", loc: "Camp Gobelin", source: "Crusher", type: "Loot", desc: "+3m Mouvement." },
                     ring2: { name: "Ring of Protection", loc: "Bosquet", source: "Mol", type: "Quête", desc: "+1 AC / +1 JS." },
-                    meleeMain: { name: "Mains Nues", loc: "-", source: "Inné", type: "Classe", desc: "Vos poings." },
-                    meleeOff: { name: "Club of Hill Giant Strength", loc: "Tour Arcanique", source: "Tabouret (Cassé)", type: "Loot", desc: "Stat Stick : Fixe la Force à 19." },
-                    rangedMain: { name: "Hunting Shortbow", loc: "Bosquet", source: "Dammon", type: "Marchand", desc: "Avantage contre Monstruosités." },
+                    meleeMain: { name: "Mains Nues", loc: "-", source: "Inné", type: "Classe", desc: "Buvez des Élixirs de Force !" },
+                    meleeOff: { name: "Mains Nues", loc: "-", source: "-", type: "Classe", desc: "-" },
+                    rangedMain: { name: "Hunting Shortbow", loc: "Bosquet", source: "Dammon", type: "Marchand", desc: "Stat stick: Avantage contre Monstruosités." },
                     rangedOff: { name: "-", loc: "-", source: "-", type: "Info", desc: "-" }
                 }
             },
@@ -200,9 +200,9 @@ const characters = [
                     amulet: { name: "Sentient Amulet", loc: "Act 1", source: "Quest", type: "Core", desc: "Ki gratuit." },
                     ring1: { name: "Shadow-Cloaked Ring", loc: "Maison Guérison", source: "Ombres", type: "Loot", desc: "+1d4 dégâts si dans l'ombre." },
                     ring2: { name: "Risky Ring", loc: "Moonrise", source: "Araj", type: "Marchand", desc: "Avantage permanent (Stunning Strike passe)." },
-                    meleeMain: { name: "Mains Nues", loc: "-", source: "-", type: "Classe", desc: "-" },
-                    meleeOff: { name: "Club of Hill Giant Strength", loc: "Act 1", source: "Loot", type: "Item", desc: "Force 19 (si pas d'élixirs)." },
-                    rangedMain: { name: "Darkfire Shortbow", loc: "Last Light", source: "Dammon", type: "Marchand", desc: "Haste gratuit." },
+                    meleeMain: { name: "Mains Nues", loc: "-", source: "-", type: "Classe", desc: "Élixirs requis." },
+                    meleeOff: { name: "Mains Nues", loc: "-", source: "-", type: "Classe", desc: "-" },
+                    rangedMain: { name: "Ne'er Misser", loc: "Moonrise", source: "Roah", "type": "Marchand", desc: "Stat stick: Dégâts de force. Sort Magic Missile." },
                     rangedOff: { name: "-", loc: "-", source: "-", type: "Info", desc: "-" }
                 }
             },
@@ -219,7 +219,7 @@ const characters = [
                     ring2: { name: "Killer's Sweetheart", loc: "Gauntlet Shar", source: "Loot", type: "Loot", desc: "Critique garanti." },
                     meleeMain: { name: "Mains Nues", loc: "-", source: "-", type: "Classe", desc: "Dégâts ~40-60 par coup." },
                     meleeOff: { name: "Mains Nues", loc: "-", source: "-", type: "Classe", desc: "Les gants donnent Force 20+." },
-                    rangedMain: { name: "Hellrider Longbow", loc: "Rivington", source: "Ferguson", type: "Marchand", desc: "+3 Initiative. Avantage Perception." },
+                    rangedMain: { name: "Hellrider Longbow", loc: "Rivington", source: "Ferguson", type: "Marchand", desc: "Stat stick: +3 Initiative. Avantage Perception." },
                     rangedOff: { name: "-", loc: "-", source: "-", type: "Info", desc: "-" }
                 }
             }
@@ -288,12 +288,12 @@ const characters = [
                     hands: { name: "Legacy of the Masters", loc: "Lower City", source: "Dammon", type: "Marchand", desc: "+2 Toucher/Dégâts. +1 JS Force." },
                     feet: { name: "Helldusk Boots", loc: "Wyrm's Rock", source: "Gortash", type: "Boss", desc: "TP + Immunité mvt forcé." },
                     amulet: { name: "Spellcrux Amulet", loc: "Moonrise", source: "Warden", "type": "Loot", desc: "Restaure un slot de sort (Action Bonus)." },
-                    ring1: { name: "Band of the Mystic Scoundrel", loc: "Jungle (Cirque)", source: "Akabi", "type": "Loot", desc: "Illusion/Enchantement en Action Bonus après attaque." },
-                    ring2: { name: "Ring of Regeneration", loc: "Sorcerous Sundries", source: "Rolan", "type": "Marchand", desc: "Soin passif." },
-                    meleeMain: { name: "Rhapsody", loc: "Palais Cazador", source: "Cazador", type: "Boss", desc: "+3 Toucher/Dégâts/DD Sorts (Stack sur kills)." },
-                    meleeOff: { name: "Viconia's Walking Fortress", loc: "House of Grief", source: "Viconia", "type": "Boss", desc: "AC +3. (Plus besoin de Force avec Dead Shot)." },
-                    rangedMain: { name: "The Dead Shot", loc: "Lower City", source: "Fytz", type: "Marchand", desc: "Critique 19-20. Double Maîtrise au toucher." },
-                    rangedOff: { name: "(2 Mains)", loc: "-", source: "-", type: "Info", desc: "-" }
+                    ring1: { name: "Band of the Mystic Scoundrel", loc: "Jungle (Cirque)", source: "Akabi", "type": "Loot", "desc": "Illusion/Enchantement en Action Bonus après attaque." },
+                    ring2: { name: "Ring of Regeneration", loc: "Sorcerous Sundries", source: "Rolan", "type": "Marchand", "desc": "Soin passif." },
+                    meleeMain: { name: "Rhapsody", loc: "Palais Cazador", source: "Cazador", "type": "Boss", "desc": "+3 Toucher/Dégâts/DD Sorts (Stack sur kills)." },
+                    meleeOff: { name: "Viconia's Walking Fortress", loc: "House of Grief", source: "Viconia", "type": "Boss", "desc": "AC +3. (Plus besoin de Force avec Dead Shot)." },
+                    rangedMain: { name: "The Dead Shot", loc: "Lower City", source: "Fytz", "type": "Marchand", "desc": "Critique 19-20. Double Maîtrise au toucher. Indispensable." },
+                    rangedOff: { name: "(2 Mains)", loc: "-", source: "-", "type": "Info", "desc": "-" }
                 }
             }
         ]

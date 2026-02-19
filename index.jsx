@@ -344,7 +344,294 @@ const GearTooltip = ({ item, color }) => {
     );
 };
 
+const getSlotIcon = (key) => {
+    switch (key) {
+        case 'head': return <Crown className="w-3 h-3" />;
+        case 'body': return <Shirt className="w-3 h-3" />;
+        case 'cloak': return <Eye className="w-3 h-3" />;
+        case 'amulet': return <Link className="w-3 h-3" />;
+        case 'hands': return <Hand className="w-3 h-3" />;
+        case 'feet': return <Footprints className="w-3 h-3" />;
+        case 'ring': case 'ring1': case 'ring2': return <Component className="w-3 h-3" />;
+        case 'weapon': case 'meleeMain': return <Sword className="w-3 h-3" />;
+        case 'shield': case 'meleeOff': return <Shield className="w-3 h-3" />;
+        case 'bow': case 'rangedMain': case 'rangedOff': return <Target className="w-3 h-3" />;
+        default: return <Info className="w-3 h-3" />;
+    }
+};
+
+const getSlotLabel = (key) => {
+    switch (key) {
+        case 'head': return 'Tête';
+        case 'body': return 'Corps';
+        case 'cloak': return 'Manteau';
+        case 'amulet': return 'Amulette';
+        case 'hands': return 'Mains';
+        case 'feet': return 'Bottes';
+        case 'ring': case 'ring1': case 'ring2': return 'Anneau';
+        case 'weapon': case 'meleeMain': return 'Arme';
+        case 'shield': case 'meleeOff': return 'Bouclier';
+        case 'bow': case 'rangedMain': case 'rangedOff': return 'Distance';
+        default: return key;
+    }
+};
+
+const places = [
+    {
+        id: 'act1',
+        name: "Acte 1",
+        zones: [
+            {
+                id: 'wilderness',
+                name: "Surface & Wilderness",
+                items: [
+                    { name: "Haste Helm", loc: "Village Dévasté", source: "Coffre (Chariot)", type: "Loot", slot: "head", desc: "Élan au début du combat (+1.5m vitesse).", relatedBuilds: ['fighter', 'monk'] },
+                    { name: "Broodmother's Revenge", loc: "Bosquet d'Émeraude", source: "Kagha", type: "Loot", slot: "amulet", desc: "Arme empoisonnée (+1d6) quand soigné. Fort sur Fighter.", relatedBuilds: ['fighter'] },
+                    { name: "Ring of Protection", loc: "Bosquet d'Émeraude", source: "Mol (Quête Idol)", type: "Quête", slot: "ring", desc: "+1 AC / +1 JS. Universellement bon.", relatedBuilds: ['fighter', 'cleric', 'monk'] },
+                    { name: "Hunting Shortbow", loc: "Bosquet d'Émeraude", source: "Dammon", type: "Marchand", slot: "bow", desc: "Avantage contre Monstruosités. Stat stick Monk.", relatedBuilds: ['monk'] },
+                    { name: "The Sparkle Hands", loc: "Putrid Bog", source: "Coffre (Arbre)", type: "Loot", slot: "hands", desc: "Charges de Foudre sur attaques mains nues.", relatedBuilds: ['monk'] },
+                    { name: "Titanstring Bow", loc: "Zhentarim Hideout", source: "Brem", type: "Marchand", slot: "bow", desc: "Ajoute Mod de Force aux dégâts. BiS Bard/Ranger.", relatedBuilds: ['bard'] },
+                    { name: "Club of Hill Giant Strength", loc: "Tour Arcanique", source: "Tabouret (Étage Sup)", type: "Loot", slot: "weapon", desc: "Force 19. Stat stick pour Titanstring.", relatedBuilds: ['bard'] }
+                ]
+            },
+            {
+                id: 'goblin_camp',
+                name: "Camp Gobelin",
+                items: [
+                    { name: "Gloves of the Growling Underdog", loc: "Trésor Dror Ragzlin", source: "Coffre", type: "Loot", slot: "hands", desc: "Avantage si entouré par 2+ ennemis.", relatedBuilds: ['fighter'] },
+                    { name: "Crusher's Ring", loc: "Extérieur", source: "Crusher", type: "Loot", slot: "ring", desc: "+3m de mouvement. Excellent pour mêlée.", relatedBuilds: ['fighter', 'monk'] },
+                    { name: "The Whispering Promise", loc: "Intérieur/Extérieur", source: "Volo / Grat", type: "Marchand", slot: "ring", desc: "Soin = Béni (+1d4 Toucher/JS). Core Support.", relatedBuilds: ['cleric'] },
+                    { name: "Bow of Awareness", loc: "Intérieur", source: "Roah Moonglow", type: "Marchand", slot: "bow", desc: "+1 Initiative. Stat stick.", relatedBuilds: ['cleric'] },
+                    { name: "Spidersilk Armour", loc: "Sanctum", source: "Minthara", type: "Boss", slot: "body", desc: "Avantage JS Constitution (Concentration).", relatedBuilds: ['bard'] },
+                    { name: "Boots of Striding", loc: "Sanctum", source: "Minthara", type: "Boss", slot: "feet", desc: "Immunité Renversement si concentré.", relatedBuilds: ['bard'] }
+                ]
+            },
+            {
+                id: 'underdark',
+                name: "Underdark & Myconid Colony",
+                items: [
+                    { name: "Phalar Aluve", loc: "Avant-poste Sélunite", source: "Rocher", type: "Loot", slot: "weapon", desc: "Épée longue qui chante/hurle. Vital pour Clerc/Bard.", relatedBuilds: ['cleric', 'bard'] },
+                    { name: "Luminous Armour", loc: "Avant-poste Sélunite", source: "Coffre secret", type: "Loot", slot: "body", desc: "Explosion radiante. Core item pour Clerc.", relatedBuilds: ['cleric'] },
+                    { name: "Caustic Band", loc: "Colonie Myconide", source: "Derryth", type: "Marchand", slot: "ring", desc: "+2 Acide aux attaques. Bon pour Fighter/Bard.", relatedBuilds: ['fighter', 'bard'] },
+                    { name: "Boots of Speed", loc: "Colonie Myconide", source: "Thulla", type: "Quête", slot: "feet", desc: "Bonus Action Dash. Core pour Monk.", relatedBuilds: ['monk'] },
+                    { name: "Boots of Stormy Clamour", loc: "Colonie Myconide", source: "Omeluum", type: "Marchand", slot: "feet", desc: "Réverbération sur condition. Core pour Clerc.", relatedBuilds: ['cleric'] },
+                    { name: "Pearl of Power Amulet", loc: "Colonie Myconide", source: "Omeluum", type: "Marchand", slot: "amulet", desc: "Restaure un emplacement de sort (Niv 3).", relatedBuilds: ['cleric'] }
+                ]
+            },
+            {
+                id: 'grymforge',
+                name: "Grymforge",
+                items: [
+                    { name: "Adamantine Splint Armour", loc: "Forge Ancienne", source: "Craft", type: "Craft", slot: "body", desc: "Meilleure armure lourde Acte 1. Core Fighter.", relatedBuilds: ['fighter'] },
+                    { name: "Adamantine Shield", loc: "Forge Ancienne", source: "Craft", type: "Craft", slot: "shield", desc: "Immunité Crit. Debuff attaquant. Core Clerc.", relatedBuilds: ['cleric'] },
+                    { name: "Disintegrating Night Walkers", loc: "Éboulement", source: "Nere", type: "Boss", slot: "feet", desc: "Misty Step gratuit. Immunité terrain.", relatedBuilds: ['fighter'] },
+                    { name: "Sentient Amulet", loc: "Lave", source: "Coffre (Élémentaire)", type: "Quête", slot: "amulet", desc: "Restauration Ki. Core Monk.", relatedBuilds: ['monk'] }
+                ]
+            },
+            {
+                id: 'creche',
+                name: "Monastère & Crèche Y'llek",
+                items: [
+                    { name: "Blood of Lathander", loc: "Monastère", source: "Quête", type: "Leg.", slot: "weapon", desc: "Aveuglement zone. Rayon Soleil. Arme légendaire.", relatedBuilds: ['cleric'] },
+                    { name: "The Graceful Cloth", loc: "Route du Monastère", source: "Lady Esther", type: "Marchand", slot: "body", desc: "+2 DEX. Avantage DEX. Core Dégâts Monk.", relatedBuilds: ['monk'] },
+                    { name: "Gloves of Dexterity", loc: "Aha y'llek", source: "Jeera", type: "Marchand", slot: "hands", desc: "DEX 18. Vital pour le Bard (dump stats).", relatedBuilds: ['bard'] },
+                    { name: "Knife of the Undermountain King", loc: "Aha y'llek", source: "Jeera", type: "Marchand", slot: "weapon", desc: "Critique amélioré. Off-hand pour Bard.", relatedBuilds: ['bard'] },
+                    { name: "Unseen Menace", loc: "Aha y'llek", source: "Jeera", type: "Marchand", slot: "weapon", desc: "Pique invisible. Avantage permanent. Core Fighter.", relatedBuilds: ['fighter'] },
+                    { name: "Diadem of Arcane Synergy", loc: "Inquisiteur", source: "Jhe'rezath", type: "Loot", slot: "head", desc: "Ajoute Mod (Stat) aux dégâts. Fort sur Bard/Paladin.", relatedBuilds: ['bard'] },
+                    { name: "Gloves of Belligerent Skies", loc: "Inquisiteur", source: "Coffre", type: "Loot", slot: "hands", desc: "Réverbération sur Tonnerre/Radiant. Core Clerc.", relatedBuilds: ['cleric'] },
+                    { name: "Holy Lance Helm", loc: "Monastère", source: "Coffre (Toit)", type: "Loot", slot: "head", desc: "Ennemis qui ratent prennent 1d4 Radiant. Core Clerc.", relatedBuilds: ['cleric'] },
+                    { name: "Strange Conduit Ring", loc: "Inquisiteur", source: "Coffre", type: "Loot", slot: "ring", desc: "+1d4 Psychique si concentré.", relatedBuilds: ['bard'] },
+                    { name: "Amulet of Branding", loc: "Aha y'llek", source: "Jeera", type: "Marchand", slot: "amulet", desc: "Vulnérabilité dégâts Physiques (1x).", relatedBuilds: ['bard'] }
+                ]
+            }
+        ]
+    },
+    {
+        id: 'act2',
+        name: "Acte 2",
+        zones: [
+            {
+                id: 'last_light',
+                name: "Auberge de l'Ultime Lueur",
+                items: [
+                    { name: "Flawed Helldusk Helmet", loc: "Forge", source: "Dammon", type: "Craft", slot: "head", desc: "+2 JS Constitution. +1 AC vs Sorts.", relatedBuilds: ['fighter'] },
+                    { name: "Flawed Helldusk Gloves", loc: "Forge", source: "Dammon", type: "Craft", slot: "hands", desc: "+1d4 Feu sur attaques. +1 JS Force.", relatedBuilds: ['fighter'] },
+                    { name: "Evasive Shoes", loc: "Extérieur", source: "Mattis", type: "Marchand", slot: "feet", desc: "+1 AC. +1 Acrobatie. Bon filler.", relatedBuilds: ['fighter', 'bard'] },
+                    { name: "Coruscation Ring", loc: "Sous-sol", source: "Coffre", type: "Loot", slot: "ring", desc: "Dégâts sorts = Orbe Radiant. Core Clerc.", relatedBuilds: ['cleric'] },
+                    { name: "Darkfire Shortbow", loc: "Forge", source: "Dammon", type: "Marchand", slot: "bow", desc: "Haste gratuit. Résistance Feu/Froid.", relatedBuilds: ['cleric'] },
+                    { name: "Hat of Uninhibited Kushigo", loc: "Intérieur", source: "Talli", type: "Marchand", slot: "head", desc: "+1 DD Sorts quand frappe mains nues.", relatedBuilds: ['monk'] },
+                    { name: "Cloak of Protection", loc: "Intérieur", source: "Talli", type: "Marchand", slot: "cloak", desc: "+1 AC / +1 JS. BiS Défensif.", relatedBuilds: ['monk', 'bard'] },
+                    { name: "Yuan-Ti Scale Mail", loc: "Intérieur", source: "Talli", type: "Marchand", slot: "body", desc: "AC 15 + Full DEX. +1 Initiative. BiS Bard Acte 2.", relatedBuilds: ['bard'] },
+                    { name: "Amulet of the Harpers", loc: "Intérieur", source: "Talli", type: "Marchand", slot: "amulet", desc: "Sort : Bouclier (Réaction +5 AC).", relatedBuilds: ['bard'] }
+                ]
+            },
+            {
+                id: 'moonrise',
+                name: "Tours de Hautelune",
+                items: [
+                    { name: "Risky Ring", loc: "RDC", source: "Araj Oblodra", type: "Marchand", slot: "ring", desc: "Avantage permanent (Attaques). Désavantage JS. Game changer.", relatedBuilds: ['fighter', 'monk'] },
+                    { name: "Dwarven Splintmail", loc: "RDC", source: "Lann Tarv", type: "Marchand", slot: "body", desc: "AC 19. +2 CON. -1 Dégâts reçus.", relatedBuilds: ['fighter'] },
+                    { name: "Halberd of Vigilance", loc: "RDC", source: "Lann Tarv", type: "Marchand", slot: "weapon", desc: "Hallebarde (2H). +1d4 Force. +1 Initiative. Réaction Avantage.", relatedBuilds: ['fighter'] },
+                    { name: "Thunderskin Cloak", loc: "RDC", source: "Araj Oblodra", type: "Marchand", slot: "cloak", desc: "Dégâts sur cible avec Réverb = Hébété (Dazed).", relatedBuilds: ['cleric'] },
+                    { name: "Gloves of Crushing", loc: "RDC", source: "Lann Tarv", type: "Marchand", slot: "hands", desc: "+1 Toucher, +2 Dégâts (Mains nues). Core Monk.", relatedBuilds: ['monk'] },
+                    { name: "Ne'er Misser", loc: "RDC", source: "Roah Moonglow", type: "Marchand", slot: "bow", desc: "Dégâts de force. Sort Magic Missile. Stat stick Monk.", relatedBuilds: ['monk'] },
+                    { name: "Ring of Free Action", loc: "RDC", source: "Araj Oblodra", type: "Marchand", slot: "ring", desc: "Ignore terrains difficiles. Anti-Paralysie.", relatedBuilds: ['monk'] },
+                    { name: "Ring of Spiteful Thunder", loc: "RDC", source: "Roah Moonglow", type: "Marchand", slot: "ring", desc: "Dégâts Tonnerre sur Réverb = Hébété.", relatedBuilds: ['cleric'] },
+                    { name: "Spineshudder Amulet", loc: "Étage (Chambre Ketheric)", source: "Coffre (Mimic)", type: "Loot", slot: "amulet", desc: "Attaque sort distance = Réverbération.", relatedBuilds: ['cleric'] },
+                    { name: "Cloak of Elemental Absorption", loc: "Étage (Chambre Ketheric)", source: "Coffre", type: "Loot", slot: "cloak", desc: "Absorbe dégâts élémentaires.", relatedBuilds: ['fighter'] },
+                    { name: "Ketheric's Shield", loc: "Toit/Colonie", source: "Ketheric Thorm", type: "Boss", slot: "shield", desc: "+1 DD Sorts. +2 AC.", relatedBuilds: ['cleric'] },
+                    { name: "Spellcrux Amulet", loc: "Prison", source: "The Warden", type: "Loot", slot: "amulet", desc: "Restaure un slot de sort (Action Bonus).", relatedBuilds: ['bard'] }
+                ]
+            },
+            {
+                id: 'reithwin',
+                name: "Reithwin & Environs",
+                items: [
+                    { name: "Helmet of Arcane Acuity", loc: "Guilde des Maçons", source: "Sous-sol (Coffre)", type: "Loot", slot: "head", desc: "BiS Absolu. Les attaques montent le DD des sorts.", relatedBuilds: ['bard'] },
+                    { name: "Surgeon's Subjugation Amulet", loc: "Maison de Guérison", source: "Malus Thorm", type: "Boss", slot: "amulet", desc: "Paralysie sur critique (1x par Long Repos).", relatedBuilds: ['fighter'] },
+                    { name: "Shadow-Cloaked Ring", loc: "Maison de Guérison", source: "Ombres (Morgue)", type: "Loot", slot: "ring", desc: "+1d4 dégâts si dans l'ombre.", relatedBuilds: ['monk'] },
+                    { name: "Killer's Sweetheart", loc: "Gauntlet of Shar", source: "Self-Same Trial", type: "Loot", slot: "ring", desc: "Critique garanti sur demande.", relatedBuilds: ['monk', 'bard'] },
+                    { name: "Boots of Uninhibited Kushigo", loc: "Plan Astral", source: "Gith Monk (Début Acte 3)", type: "Loot", slot: "feet", desc: "Ajoute mod. Sagesse aux dégâts mains nues. Core Monk. (Tech. Acte 3 transition)", relatedBuilds: ['monk'] }
+                ]
+            }
+        ]
+    },
+    {
+        id: 'act3',
+        name: "Acte 3",
+        zones: [
+            {
+                id: 'rivington',
+                name: "Rivington & Wyrm's Crossing",
+                items: [
+                    { name: "Nymph Cloak", loc: "Wyrm's Crossing", source: "Danthelon", type: "Marchand", slot: "cloak", desc: "Sort : Domination de Personne.", relatedBuilds: ['bard'] },
+                    { name: "Cloak of Displacement", loc: "Wyrm's Crossing", source: "Danthelon", type: "Marchand", slot: "cloak", desc: "Désavantage aux attaquants (Blur permanent). BiS Défensif.", relatedBuilds: ['fighter', 'monk'] },
+                    { name: "Hellrider Longbow", loc: "Rivington", source: "Fergus Drogher", type: "Marchand", slot: "bow", desc: "+3 Initiative. Avantage Perception.", relatedBuilds: ['monk'] },
+                    { name: "Band of the Mystic Scoundrel", loc: "Cirque", source: "Akabi (Jungle)", type: "Loot", slot: "ring", desc: "Illusion/Enchantement en Action Bonus après attaque. BiS Bard.", relatedBuilds: ['bard'] },
+                    { name: "Helldusk Boots", loc: "Wyrm's Rock", source: "Gortash's Chest", type: "Boss", slot: "feet", desc: "TP + Immunité mvt forcé. BiS.", relatedBuilds: ['cleric', 'bard'] }
+                ]
+            },
+            {
+                id: 'lower_city',
+                name: "Ville Basse (Lower City)",
+                items: [
+                    { name: "Armour of Agility", loc: "Armurerie de Stormshore", source: "Gloomy Fentonson", type: "Marchand", slot: "body", desc: "AC 17 + Full DEX. +2 JS. BiS Bard.", relatedBuilds: ['bard'] },
+                    { name: "Legacy of the Masters", loc: "Forge des Neuf", source: "Dammon", type: "Marchand", slot: "hands", desc: "+2 Toucher/Dégâts. +1 JS Force.", relatedBuilds: ['bard'] },
+                    { name: "Boots of Persistence", loc: "Forge des Neuf", source: "Dammon", type: "Marchand", slot: "feet", desc: "Liberté de mvt. +1 JS DEX. Résistance.", relatedBuilds: ['fighter'] },
+                    { name: "The Dead Shot", loc: "Armurerie de Stormshore", source: "Fytz", type: "Marchand", slot: "bow", desc: "Critique 19-20. Double Maîtrise au toucher. Indispensable.", relatedBuilds: ['bard'] },
+                    { name: "Amulet of the Devout", loc: "Stormshore Tabernacle", source: "Sous-sol", type: "Loot", slot: "amulet", desc: "+2 DD Sorts. Canalisation extra. BiS Clerc.", relatedBuilds: ['cleric'] },
+                    { name: "Ring of Regeneration", loc: "Sorcerous Sundries", source: "Rolan/Lorroakan", type: "Marchand", slot: "ring", desc: "Soin passif (1d4).", relatedBuilds: ['fighter', 'bard'] },
+                    { name: "Vest of Soul Rejuvenation", loc: "Sorcerous Sundries", source: "Lorroakan", type: "Loot", slot: "body", desc: "+2 AC. Réaction attaque gratuite si on vous rate. BiS Monk.", relatedBuilds: ['monk'] },
+                    { name: "Khalid's Gift", loc: "Maison de Jaheira", source: "Armoire", type: "Loot", slot: "amulet", desc: "+1 Sagesse (Max 21). Aide le scaling Monk.", relatedBuilds: ['monk'] },
+                    { name: "Mask of Soul Perception", loc: "Devil's Fee", source: "Helsik", type: "Loot", slot: "head", desc: "+2 Toucher. +2 Initiative.", relatedBuilds: ['monk'] },
+                    { name: "Rhapsody", loc: "Palais de Cazador", source: "Cazador", type: "Boss", slot: "weapon", desc: "+3 Toucher/Dégâts/DD Sorts (Stack sur kills).", relatedBuilds: ['bard'] }
+                ]
+            },
+            {
+                id: 'boss_areas',
+                name: "Zones de Boss & Endgame",
+                items: [
+                    { name: "Helldusk Armour", loc: "House of Hope", source: "Raphael", type: "Boss", slot: "body", desc: "AC 21. Vol. Maîtrise automatique.", relatedBuilds: ['fighter'] },
+                    { name: "Gauntlets of Hill Giant Strength", loc: "House of Hope", source: "Archives", type: "Loot", slot: "hands", desc: "Fixe la Force à 23.", relatedBuilds: ['fighter'] },
+                    { name: "Amulet of Greater Health", loc: "House of Hope", source: "Archives", type: "Loot", slot: "amulet", desc: "Fixe la Constitution à 23.", relatedBuilds: ['fighter'] },
+                    { name: "Gloves of Soul Catching", loc: "House of Hope", source: "Hope (Quête)", type: "Quête", slot: "hands", desc: "+1d10 Force. Soin/Avantage. +2 CON. BiS Monk.", relatedBuilds: ['monk'] },
+                    { name: "Viconia's Walking Fortress", loc: "House of Grief", source: "Viconia", type: "Boss", slot: "shield", desc: "AC +3. Renvoi sorts. Avantage JS. BiS Shield.", relatedBuilds: ['cleric', 'bard'] },
+                    { name: "Sarevok's Horned Helmet", loc: "Temple de Bhaal", source: "Sarevok", type: "Boss", slot: "head", desc: "Réduit le seuil de critique de 1. Immunité Effroi.", relatedBuilds: ['fighter'] },
+                    { name: "Balduran's Giantslayer", loc: "Wyrmway", source: "Ansur", type: "Boss", slot: "weapon", desc: "Double Mod Force aux dégâts. Forme de Géant. BiS Fighter.", relatedBuilds: ['fighter'] },
+                    { name: "Gontr Mael", loc: "Steel Watch Foundry", source: "Titan", type: "Boss", slot: "bow", desc: "Légendaire. Haste Céleste (5 tours, pas de léthargie).", relatedBuilds: ['fighter'] },
+                    { name: "Devotee's Mace", loc: "N/A", source: "Intervention Divine", type: "Classe", slot: "weapon", desc: "Aura d'Encens (Soin 1d4 passif/tour). Arme Clerc.", relatedBuilds: ['cleric'] }
+                ]
+            }
+        ]
+    }
+];
+
+const AtlasView = () => {
+    const [activeAct, setActiveAct] = useState('act1');
+    const [expandedZone, setExpandedZone] = useState('underdark');
+
+    return (
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* Act Selector */}
+            <div className="flex gap-4 border-b border-white/10 pb-4">
+                {places.map(act => (
+                    <button
+                        key={act.id}
+                        onClick={() => setActiveAct(act.id)}
+                        className={`px-4 py-2 rounded-lg text-sm font-black uppercase tracking-wider transition-all duration-300 ${activeAct === act.id
+                            ? 'bg-amber-500 text-slate-900 shadow-[0_0_15px_rgba(245,158,11,0.4)] scale-105'
+                            : 'bg-black/40 text-slate-500 hover:text-slate-200 hover:bg-white/5'
+                            }`}
+                    >
+                        {act.name}
+                    </button>
+                ))}
+            </div>
+
+            <div className="grid gap-6">
+                {places.find(a => a.id === activeAct)?.zones.map(zone => (
+                    <div key={zone.id} className="group border border-white/5 bg-slate-900/40 rounded-xl overflow-hidden backdrop-blur-sm hover:border-white/10 transition-all duration-300">
+                        {/* Zone Header */}
+                        <button
+                            onClick={() => setExpandedZone(expandedZone === zone.id ? null : zone.id)}
+                            className="w-full p-4 flex items-center justify-between bg-black/20 hover:bg-white/5 transition-colors"
+                        >
+                            <div className="flex items-center gap-3">
+                                <MapPin className={`w-5 h-5 ${expandedZone === zone.id ? 'text-amber-500' : 'text-slate-600'}`} />
+                                <span className={`text-lg font-bold uppercase tracking-wide ${expandedZone === zone.id ? 'text-amber-100' : 'text-slate-400'}`}>
+                                    {zone.name}
+                                </span>
+                            </div>
+                            <ChevronRight className={`w-5 h-5 text-slate-600 transition-transform duration-300 ${expandedZone === zone.id ? 'rotate-90 text-amber-500' : ''}`} />
+                        </button>
+
+                        {/* Items List */}
+                        <div className={`transition-all duration-500 ease-in-out ${expandedZone === zone.id ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                            <div className="p-4 grid gap-3">
+                                {zone.items.map((item, idx) => (
+                                    <div key={idx} className="bg-black/40 border border-white/5 rounded-lg p-3 flex flex-col md:flex-row gap-4 items-start md:items-center group/item hover:border-amber-500/30 hover:bg-slate-900/60 transition-all duration-200">
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <div className="text-amber-500/80" title={getSlotLabel(item.slot)}>
+                                                    {getSlotIcon(item.slot)}
+                                                </div>
+                                                <span className="text-amber-200 font-bold text-sm group-hover/item:text-amber-400 transition-colors">{item.name}</span>
+                                                <span className="text-[10px] bg-white/10 text-slate-400 px-1.5 rounded uppercase tracking-wider">{item.type}</span>
+                                            </div>
+                                            <p className="text-xs text-slate-400 leading-relaxed">{item.desc}</p>
+                                        </div>
+
+                                        <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
+                                            <div className="text-right">
+                                                <div className="text-[10px] text-slate-500 uppercase tracking-widest mb-0.5">Source</div>
+                                                <div className="text-xs text-slate-300">{item.source}</div>
+                                            </div>
+
+                                            <div className="flex -space-x-2">
+                                                {item.relatedBuilds.map(buildId => {
+                                                    const char = characters.find(c => c.id === buildId);
+                                                    if (!char) return null;
+                                                    return (
+                                                        <div key={buildId} className="w-8 h-8 rounded-full border border-slate-900 bg-slate-800 flex items-center justify-center text-slate-400 relative z-10 hover:z-20 hover:scale-110 transition-transform" title={char.name}>
+                                                            <div className={`${char.color}`}>{char.icon}</div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
 export default function BG3Deck() {
+    const [currentView, setCurrentView] = useState('builds'); // 'builds' | 'atlas'
     const [activeTab, setActiveTab] = useState(characters[0].id);
     const activeChar = characters.find(c => c.id === activeTab);
 
@@ -358,7 +645,7 @@ export default function BG3Deck() {
         setAnimating(true);
         const timer = setTimeout(() => setAnimating(false), 300);
         return () => clearTimeout(timer);
-    }, [activeTab]);
+    }, [activeTab, currentView]);
 
 
 
@@ -407,7 +694,7 @@ export default function BG3Deck() {
             {/* Header - Glassmorphism */}
             <header className="sticky top-0 z-50 border-b border-white/5 bg-slate-950/80 backdrop-blur-md shadow-lg shadow-black/50">
                 <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-3 group cursor-pointer">
+                    <div className="flex items-center gap-3 group cursor-pointer" onClick={() => setCurrentView('builds')}>
                         <div className="relative">
                             <Crown className="text-amber-500 w-8 h-8 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)] group-hover:scale-110 transition-transform duration-300" />
                             <div className="absolute inset-0 bg-amber-500 blur-xl opacity-20 rounded-full animate-pulse"></div>
@@ -419,8 +706,21 @@ export default function BG3Deck() {
                             <p className="text-[10px] text-amber-500/80 tracking-[0.2em] uppercase font-bold">Dream Team Protocol</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                        {/* AI buttons removed */}
+
+                    {/* View Switcher Navigation */}
+                    <div className="flex bg-black/40 rounded-lg p-1 border border-white/5">
+                        <button
+                            onClick={() => setCurrentView('builds')}
+                            className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center gap-2 ${currentView === 'builds' ? 'bg-amber-500 text-slate-900 shadow-lg' : 'text-slate-500 hover:text-slate-200'}`}
+                        >
+                            <Sword className="w-3 h-3" /> Builds
+                        </button>
+                        <button
+                            onClick={() => setCurrentView('atlas')}
+                            className={`px-4 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all duration-300 flex items-center gap-2 ${currentView === 'atlas' ? 'bg-indigo-500 text-white shadow-lg' : 'text-slate-500 hover:text-slate-200'}`}
+                        >
+                            <MapPin className="w-3 h-3" /> Atlas
+                        </button>
                     </div>
                 </div>
             </header>
@@ -430,56 +730,74 @@ export default function BG3Deck() {
 
             <main className="max-w-6xl mx-auto px-4 py-8 relative z-10">
 
-                {/* Intro Banner - Styled */}
+                {currentView === 'atlas' ? (
+                    <AtlasView />
+                ) : (
+                    <>
+                        {/* Character Navigation - Neon Cards */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                            {characters.map((char) => (
+                                <button
+                                    key={char.id}
+                                    onClick={() => { setActiveTab(char.id); }}
+                                    className={`
+                        relative overflow-hidden group flex flex-col items-center justify-center p-6 rounded-xl border transition-all duration-500
+                        focus:outline-none
+                        ${activeTab === char.id
+                                            ? `bg-slate-900/80 ${char.border} ${char.glow} border-opacity-100 scale-105 shadow-[0_0_30px_-5px_var(--tw-shadow-color)] z-10`
+                                            : 'bg-slate-900/30 border-slate-800/50 hover:bg-slate-800/50 hover:border-slate-600 opacity-60 hover:opacity-100 hover:scale-[1.02]'
+                                        }
+                    `}
+                                >
+                                    {/* Background gradient on active */}
+                                    {activeTab === char.id && (
+                                        <div className={`absolute inset-0 bg-gradient-to-br ${char.accent} opacity-10`}></div>
+                                    )}
 
+                                    <div className={`relative z-10 transition-all duration-300 ${activeTab === char.id ? char.color : 'text-slate-500 group-hover:text-slate-300'} mb-3 transform group-hover:scale-110 group-hover:-translate-y-1`}>
+                                        {char.icon}
+                                    </div>
+                                    <span className={`relative z-10 text-sm font-black uppercase tracking-wider ${activeTab === char.id ? 'text-white drop-shadow-md' : 'text-slate-500 group-hover:text-slate-200'}`}>
+                                        {char.name}
+                                    </span>
+                                    <span className="relative z-10 text-[10px] text-slate-500 font-mono mt-2 bg-black/30 px-2 py-1 rounded border border-white/5">{char.classSplit}</span>
+                                </button>
+                            ))}
+                        </div>
 
-                {/* Character Navigation - Neon Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-                    {characters.map((char) => (
-                        <button
-                            key={char.id}
-                            onClick={() => { setActiveTab(char.id); }}
-                            className={`
-                relative overflow-hidden group flex flex-col items-center justify-center p-6 rounded-xl border transition-all duration-500
-                focus:outline-none
-                ${activeTab === char.id
-                                    ? `bg-slate-900/80 ${char.border} ${char.glow} border-opacity-100 scale-105 shadow-[0_0_30px_-5px_var(--tw-shadow-color)] z-10`
-                                    : 'bg-slate-900/30 border-slate-800/50 hover:bg-slate-800/50 hover:border-slate-600 opacity-60 hover:opacity-100 hover:scale-[1.02]'
-                                }
-              `}
-                        >
-                            {/* Background gradient on active */}
-                            {activeTab === char.id && (
-                                <div className={`absolute inset-0 bg-gradient-to-br ${char.accent} opacity-10`}></div>
-                            )}
+                        {/* Main Content Area - Animated */}
+                        <div className={`transition-all duration-500 ${animating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
 
-                            <div className={`relative z-10 transition-all duration-300 ${activeTab === char.id ? char.color : 'text-slate-500 group-hover:text-slate-300'} mb-3 transform group-hover:scale-110 group-hover:-translate-y-1`}>
-                                {char.icon}
-                            </div>
-                            <span className={`relative z-10 text-sm font-black uppercase tracking-wider ${activeTab === char.id ? 'text-white drop-shadow-md' : 'text-slate-500 group-hover:text-slate-200'}`}>
-                                {char.name}
-                            </span>
-                            <span className="relative z-10 text-[10px] text-slate-500 font-mono mt-2 bg-black/30 px-2 py-1 rounded border border-white/5">{char.classSplit}</span>
-                        </button>
-                    ))}
-                </div>
+                            {/* Header Card - No Border, just pure style */}
+                            <div className={`p-8 rounded-2xl ${activeChar.bg} backdrop-blur-sm relative overflow-hidden mb-8 shadow-2xl`}>
+                                {/* Ambient Background Glow */}
+                                <div className={`absolute top-0 right-0 w-64 h-64 bg-gradient-to-br ${activeChar.accent} rounded-full blur-[80px] opacity-20 -mr-16 -mt-16 pointer-events-none`}></div>
 
-                {/* Main Content Area - Animated */}
-                <div className={`transition-all duration-500 ${animating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
-
-                    {/* Header Card - No Border, just pure style */}
-                    <div className={`p-8 rounded-2xl ${activeChar.bg} backdrop-blur-sm relative overflow-hidden mb-8 shadow-2xl`}>
-                        {/* Ambient Background Glow */}
-                        <div className={`absolute top-0 right-0 w-64 h-64 bg-gradient-to-br ${activeChar.accent} rounded-full blur-[80px] opacity-20 -mr-16 -mt-16 pointer-events-none`}></div>
-
-                        <div className="relative z-10">
-                            <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-6">
-                                <div>
-                                    <h2 className={`text-4xl font-black ${activeChar.color} mb-2 tracking-tight drop-shadow-[0_0_10px_rgba(0,0,0,0.5)]`}>{activeChar.name}</h2>
-                                    <div className="flex flex-wrap items-center gap-3">
-                                        <div className="text-xs font-bold text-slate-300 bg-black/40 px-3 py-1.5 rounded-md border border-white/10 uppercase tracking-widest shadow-inner">
-                                            {activeChar.classSplit}
+                                <div className="relative z-10">
+                                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-6">
+                                        <div>
+                                            <h2 className={`text-4xl font-black ${activeChar.color} mb-2 tracking-tight drop-shadow-[0_0_10px_rgba(0,0,0,0.5)]`}>{activeChar.name}</h2>
+                                            <div className="flex flex-wrap items-center gap-3">
+                                                <div className="text-xs font-bold text-slate-300 bg-black/40 px-3 py-1.5 rounded-md border border-white/10 uppercase tracking-widest shadow-inner">
+                                                    {activeChar.classSplit}
+                                                </div>
+                                            </div>
                                         </div>
+
+
+                                    </div>
+                                </div>
+
+                                {/* Character Details Grid */}
+                                {/* Character Details Grid */}
+                                <div className="grid md:grid-cols-2 gap-6 p-4 rounded-xl bg-black/20 border border-white/5">
+                                    <div>
+                                        <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2">Rôle Tactique</h3>
+                                        <p className="text-slate-200 font-medium text-sm leading-relaxed">{activeChar.role}</p>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2">Statut & Note</h3>
+                                        <p className="text-slate-300 italic text-sm border-l-2 border-white/10 pl-3">"{activeChar.status}"</p>
                                     </div>
                                 </div>
 
@@ -487,101 +805,86 @@ export default function BG3Deck() {
                             </div>
                         </div>
 
-                        {/* Character Details Grid */}
-                        {/* Character Details Grid */}
-                        <div className="grid md:grid-cols-2 gap-6 p-4 rounded-xl bg-black/20 border border-white/5">
-                            <div>
-                                <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2">Rôle Tactique</h3>
-                                <p className="text-slate-200 font-medium text-sm leading-relaxed">{activeChar.role}</p>
-                            </div>
-                            <div>
-                                <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2">Statut & Note</h3>
-                                <p className="text-slate-300 italic text-sm border-l-2 border-white/10 pl-3">"{activeChar.status}"</p>
-                            </div>
-                        </div>
+                        <div className={`grid md:grid-cols-12 gap-8 transition-all duration-500 ${animating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
 
+                            {/* Left Column: Progression */}
+                            <div className="md:col-span-4 space-y-4">
+                                <div className="bg-slate-900/40 rounded-2xl p-6 border border-white/5 backdrop-blur-sm shadow-xl h-full">
+                                    <h3 className={`text-lg font-black ${activeChar.color} mb-6 flex items-center gap-3 border-b border-white/5 pb-4 uppercase tracking-wider`}>
+                                        <Zap className="w-5 h-5" /> Progression
+                                    </h3>
+                                    <div className="space-y-6 relative pl-2">
+                                        {/* Neon Line */}
+                                        <div className={`absolute left-[29px] top-4 bottom-4 w-0.5 bg-gradient-to-b ${activeChar.accent} opacity-30`}></div>
 
-                    </div>
-                </div>
-
-                <div className="grid md:grid-cols-12 gap-8">
-
-                    {/* Left Column: Progression */}
-                    <div className="md:col-span-4 space-y-4">
-                        <div className="bg-slate-900/40 rounded-2xl p-6 border border-white/5 backdrop-blur-sm shadow-xl h-full">
-                            <h3 className={`text-lg font-black ${activeChar.color} mb-6 flex items-center gap-3 border-b border-white/5 pb-4 uppercase tracking-wider`}>
-                                <Zap className="w-5 h-5" /> Progression
-                            </h3>
-                            <div className="space-y-6 relative pl-2">
-                                {/* Neon Line */}
-                                <div className={`absolute left-[29px] top-4 bottom-4 w-0.5 bg-gradient-to-b ${activeChar.accent} opacity-30`}></div>
-
-                                {activeChar.progression.map((step, idx) => (
-                                    <div key={idx} className="relative z-10 flex gap-5 items-start group">
-                                        <div className={`flex-shrink-0 w-12 h-12 rounded-xl bg-slate-900 border border-white/10 flex items-center justify-center font-black ${activeChar.color} text-sm shadow-lg group-hover:scale-110 transition-transform duration-300 ring-1 ring-transparent group-hover:ring-${activeChar.color}/30`}>
-                                            {step.level === "Feats" || step.level === "Note" ? <Award className="w-5 h-5" /> : step.level}
-                                        </div>
-                                        <div className="bg-black/20 p-4 rounded-xl border border-white/5 flex-1 hover:bg-white/5 hover:border-white/10 transition-colors duration-300">
-                                            <p className="text-sm text-slate-300 leading-snug">{step.text}</p>
-                                        </div>
+                                        {activeChar.progression.map((step, idx) => (
+                                            <div key={idx} className="relative z-10 flex gap-5 items-start group">
+                                                <div className={`flex-shrink-0 w-12 h-12 rounded-xl bg-slate-900 border border-white/10 flex items-center justify-center font-black ${activeChar.color} text-sm shadow-lg group-hover:scale-110 transition-transform duration-300 ring-1 ring-transparent group-hover:ring-${activeChar.color}/30`}>
+                                                    {step.level === "Feats" || step.level === "Note" ? <Award className="w-5 h-5" /> : step.level}
+                                                </div>
+                                                <div className="bg-black/20 p-4 rounded-xl border border-white/5 flex-1 hover:bg-white/5 hover:border-white/10 transition-colors duration-300">
+                                                    <p className="text-sm text-slate-300 leading-snug">{step.text}</p>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    {/* Right Column: Gear */}
-                    <div className="md:col-span-8 space-y-4">
-                        <div className="bg-slate-900/40 rounded-2xl p-6 border border-white/5 backdrop-blur-sm shadow-xl h-full">
-                            <h3 className={`text-lg font-black ${activeChar.color} mb-6 flex items-center gap-3 border-b border-white/5 pb-4 uppercase tracking-wider`}>
-                                <Shield className="w-5 h-5" /> Arsenal & Équipement
-                            </h3>
+                            {/* Right Column: Gear */}
+                            <div className="md:col-span-8 space-y-4">
+                                <div className="bg-slate-900/40 rounded-2xl p-6 border border-white/5 backdrop-blur-sm shadow-xl h-full">
+                                    <h3 className={`text-lg font-black ${activeChar.color} mb-6 flex items-center gap-3 border-b border-white/5 pb-4 uppercase tracking-wider`}>
+                                        <Shield className="w-5 h-5" /> Arsenal & Équipement
+                                    </h3>
 
-                            <div className="space-y-10">
-                                {activeChar.gear.map((act, actIdx) => (
-                                    <div key={actIdx} className="group/act">
-                                        <h4 className="text-xs font-black text-slate-500 uppercase tracking-[0.3em] mb-4 flex items-center pl-1 border-b border-white/5 pb-2">
-                                            <ChevronRight className={`w-4 h-4 mr-2 ${activeChar.color} transition-transform group-hover/act:translate-x-1`} />
-                                            {act.act}
-                                        </h4>
+                                    <div className="space-y-10">
+                                        {activeChar.gear.map((act, actIdx) => (
+                                            <div key={actIdx} className="group/act">
+                                                <h4 className="text-xs font-black text-slate-500 uppercase tracking-[0.3em] mb-4 flex items-center pl-1 border-b border-white/5 pb-2">
+                                                    <ChevronRight className={`w-4 h-4 mr-2 ${activeChar.color} transition-transform group-hover/act:translate-x-1`} />
+                                                    {act.act}
+                                                </h4>
 
-                                        {/* Grid Layout for Gear Slots */}
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                            {Object.entries(act.slots).map(([key, item], idx) => {
-                                                // Only render if item exists and name is not "-"
-                                                if (!item || item.name === '-') return null;
-                                                return (
-                                                    <div
-                                                        key={idx}
-                                                        className="relative bg-black/30 rounded-lg border border-white/5 hover:border-white/20 transition-all duration-300 hover:shadow-lg flex flex-col group/item hover:-translate-y-0.5 overflow-visible"
-                                                        onMouseEnter={() => setHoveredItem(`${actIdx}-${key}`)}
-                                                        onMouseLeave={() => setHoveredItem(null)}
-                                                    >
-                                                        <div className="bg-white/5 px-3 py-2 flex items-center gap-2 border-b border-white/5 rounded-t-lg">
-                                                            <span className={`${activeChar.color} opacity-70`}>{getSlotIcon(key)}</span>
-                                                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{getSlotLabel(key)}</span>
-                                                        </div>
-                                                        <div className="p-3 flex-1 flex items-center">
-                                                            <span className="text-xs font-medium text-slate-300 leading-snug group-hover/item:text-white transition-colors">
-                                                                {item.name}
-                                                            </span>
-                                                        </div>
+                                                {/* Grid Layout for Gear Slots */}
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                                    {Object.entries(act.slots).map(([key, item], idx) => {
+                                                        // Only render if item exists and name is not "-"
+                                                        if (!item || item.name === '-') return null;
+                                                        return (
+                                                            <div
+                                                                key={idx}
+                                                                className="relative bg-black/30 rounded-lg border border-white/5 hover:border-white/20 transition-all duration-300 hover:shadow-lg flex flex-col group/item hover:-translate-y-0.5 overflow-visible"
+                                                                onMouseEnter={() => setHoveredItem(`${actIdx}-${key}`)}
+                                                                onMouseLeave={() => setHoveredItem(null)}
+                                                            >
+                                                                <div className="bg-white/5 px-3 py-2 flex items-center gap-2 border-b border-white/5 rounded-t-lg">
+                                                                    <span className={`${activeChar.color} opacity-70`}>{getSlotIcon(key)}</span>
+                                                                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{getSlotLabel(key)}</span>
+                                                                </div>
+                                                                <div className="p-3 flex-1 flex items-center">
+                                                                    <span className="text-xs font-medium text-slate-300 leading-snug group-hover/item:text-white transition-colors">
+                                                                        {item.name}
+                                                                    </span>
+                                                                </div>
 
-                                                        {/* Render Tooltip if hovered */}
-                                                        {hoveredItem === `${actIdx}-${key}` && (
-                                                            <GearTooltip item={item} color={activeChar.color} />
-                                                        )}
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
+                                                                {/* Render Tooltip if hovered */}
+                                                                {hoveredItem === `${actIdx}-${key}` && (
+                                                                    <GearTooltip item={item} color={activeChar.color} />
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                </div>
+                        </div>
+                    </>
+                )}
             </main>
         </div>
     );
